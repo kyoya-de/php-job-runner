@@ -1,0 +1,15 @@
+{
+  "name": "kyoya/php-job-runner",
+  "description": "This is a framework to run jobs (maybe cron-jobs). Each job is separated into three tasks: fetching data from source, process fetched data, put into target format.",
+  "minimum-stability": "dev",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Stefan Krenz",
+      "email": "info@kyoya.de"
+    }
+  ],
+  "require": {
+    "silex/silex": "v1.2.3"
+  }
+}
