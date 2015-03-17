@@ -1,7 +1,7 @@
 {
   "name": "kyoya/php-job-runner",
   "description": "This is a framework to run jobs (maybe cron-jobs). Each job is separated into three tasks: fetching data from source, process fetched data, put into target format.",
-  "minimum-stability": "dev",
+  "minimum-stability": "stable",
   "license": "MIT",
   "authors": [
     {
@@ -10,6 +10,18 @@
     }
   ],
   "require": {
-    "silex/silex": "v1.2.3"
+    "symfony/console": "~2.6",
+    "symfony/process": "~2.6",
+    "symfony/dependency-injection": "~2.6",
+    "symfony/config": "~2.6",
+    "symfony/yaml": "~2.6",
+    "symfony/serializer": "~2.6",
+    "symfony/finder": "~2.6",
+    "symfony/filesystem": "~2.6",
+    "psr/log":"~1.0",
+    "symfony/event-dispatcher":"~2.6"
+  },
+  "autoload":{
+    "classmap":["src/"]
   }
 }

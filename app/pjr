@@ -1,0 +1,11 @@
+#!/usr/bin/env php
+<?php
+
+/** @var \Composer\Autoload\ClassLoader $loader */
+$loader = include __DIR__ . '/../vendor/autoload.php';
+
+$containerLoader = new \Kyoya\DependencyInjection\ContainerLoader(__DIR__ . '/..');
+$containerLoader->loadContainer("cachedContainer.php");
+
+$app = new \Symfony\Component\Console\Application('PHP-Job-Runner', 'v0.0.1');
+$app->run();
