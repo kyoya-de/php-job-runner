@@ -31,7 +31,7 @@ class ExecuteCommand extends ContainerAwareCommand
         $finder = new Finder();
         $finder->files()->in($this->container->getParameter('workflows_dir'))->name('*.yml');
         $isolate = $input->getOption('isolate');
-        $command = $this->getApplication()->find('workflow:execute');
+
 
         /** @var SplFileInfo $file */
         foreach ($finder as $file) {
@@ -44,10 +44,15 @@ class ExecuteCommand extends ContainerAwareCommand
 
             $cmdInput = new ArrayInput(
                 array(
-                    'workflow' => $workflow
+                    'command' => 'workflow:execute',
+                    'name' => $workflow
                 )
             );
 
+            $command = $this->getApplication()->find('workflow:execute');
+            if ($command instanceof ContainerAwareCommand) {
+                $command->setContainer($this->container);
+            }
             $command->run($cmdInput, $output);
         }
     }
