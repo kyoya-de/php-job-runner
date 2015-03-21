@@ -19,9 +19,32 @@
     "symfony/finder": "~2.6",
     "symfony/filesystem": "~2.6",
     "psr/log":"~1.0",
-    "symfony/event-dispatcher":"~2.6"
+    "symfony/event-dispatcher":"~2.6",
+    "monolog/monolog":"~1.13",
+    "kyoya-de/process":"dev-master"
   },
   "autoload":{
     "classmap":["src/"]
-  }
+  },
+  "repositories": [
+    {
+      "type":"composer",
+      "url":"https://github.com/kyoya-de/Process.git"
+    }
+    {
+      "type": "package",
+      "package": {
+        "name": "",
+        "version": "2.6",
+        "dist": {
+          "url": "https://github.com/kyoya-de/Process/archive/2.6.zip",
+          "type": "zip"
+        },
+        "source": {
+          "url": "git@github.com:kyoya-de/Process.git",
+          "type": "git",
+          "reference": "refs/2.6"
+        }
+      }
+    }  ]
 }

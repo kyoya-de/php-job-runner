@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="provider.storage.php_serialize.class">Kyoya\PhpJobRunner\StorageProvider\PhpSerialize</parameter>
+        <parameter key="container_aware_command.event_subscriber.class">Kyoya\PhpJobRunner\Command\ContainerCommandSubscriber</parameter>
+        <parameter key="workflow.manager.class">Kyoya\PhpJobRunner\Workflow\Manager</parameter>
+        <parameter key="logger.handler.stream.class">Monolog\Handler\StreamHandler</parameter>
+        <parameter key="logger.class">Monolog\Logger</parameter>
+    </parameters>
+
+    <services>
+        <service id="container_aware_command.event_subscriber" class="%container_aware_command.event_subscriber.class%">
+            <call method="setContainer">
+                <argument type="service" id="service_container"/>
+            </call>
+        </service>
+
+        <service id="provider.storage.php_serialize" class="%provider.storage.php_serialize.class%">
+            <argument>%state_storage.provider_config%</argument>
+        </service>
+
+        <service id="workflow.manager" class="%workflow.manager.class%">
+            <argument>%workflows_dir%</argument>
+        </service>
+
+        <service id="logger.handler.main_log" class="%logger.handler.stream.class%">
+            <argument>%log_dir%/%env%.log</argument>
+        </service>
+
+        <service id="logger" class="%logger.class%">
+            <argument>php-job-runner</argument>
+            <call method="pushHandler">
+                <argument type="service" id="logger.handler.main_log"/>
+            </call>
+        </service>
+
+        <service id="logger.handler.error_log" class="%logger.handler.stream.class%">
+            <argument>%log_dir%/error.log</argument>
+        </service>
+
+        <service id="logger.error" class="%logger.class%">
+            <argument>error</argument>
+            <call method="pushHandler">
+                <argument type="service" id="logger.handler.error_log"/>
+            </call>
+        </service>
+    </services>
+</container>

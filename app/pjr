@@ -4,8 +4,40 @@
 /** @var \Composer\Autoload\ClassLoader $loader */
 $loader = include __DIR__ . '/../vendor/autoload.php';
 
-$containerLoader = new \Kyoya\DependencyInjection\ContainerLoader(__DIR__ . '/..');
-$containerLoader->loadContainer("cachedContainer.php");
+use Symfony\Component\Console\Application;
+use Kyoya\PhpJobRunner\DependencyInjection\ContainerLoader;
+use Kyoya\PhpJobRunner\Command\WorkflowExecuteCommand;
+use Symfony\Component\EventDispatcher\ContainerAwareEventDispatcher;
+use Monolog\ErrorHandler;
+use Symfony\Component\Console\Input\ArgvInput;
+use Kyoya\PhpJobRunner\Command\ExecuteTaskCommand;
+use Symfony\Component\Console\Input\InputOption;
+use Kyoya\PhpJobRunner\Command\ExecuteCommand;
 
-$app = new \Symfony\Component\Console\Application('PHP-Job-Runner', 'v0.0.1');
-$app->run();
+$app = new Application('PHP-Job-Runner', 'v0.0.1');
+
+$app->add(new WorkflowExecuteCommand());
+$app->add(new ExecuteTaskCommand());
+$app->add(new ExecuteCommand());
+
+$input = new ArgvInput();
+$app->getDefinition()->addOption(new InputOption('env', 'e', InputOption::VALUE_REQUIRED, 'Sets the environment', 'dev'));
+$appEnv = $input->getParameterOption(array('--env', '-e'), getenv('PJR_ENV') ?: 'dev');
+
+$containerLoader = new ContainerLoader(__DIR__ . '/..');
+$containerLoader->addParameter('env', $appEnv);
+$containerLoader->loadContainer("cachedContainer.php", 'prod' != strtolower($appEnv));
+
+$dispatcher = new ContainerAwareEventDispatcher($containerLoader->getContainer());
+$dispatcher->addSubscriberService(
+    'container_aware_command.event_subscriber',
+    '\\Kyoya\\PhpJobRunner\\Command\\ContainerCommandSubscriber'
+);
+
+$app->setDispatcher($dispatcher);
+
+/** @var \Psr\Log\LoggerInterface $logger */
+$logger = $containerLoader->getContainer()->get('logger.error');
+ErrorHandler::register($logger);
+
+exit($app->run($input));
