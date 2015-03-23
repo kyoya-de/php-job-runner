@@ -4,6 +4,7 @@ namespace Kyoya\PhpJobRunner\Command;
 
 use Kyoya\PhpJobRunner\ParameterBag\ParameterAwareInterface;
 use Kyoya\PhpJobRunner\ParameterBag\ParameterBag;
+use Kyoya\PhpJobRunner\StorageProvider\IOException;
 use Kyoya\PhpJobRunner\StorageProvider\ProviderInterface;
 use Kyoya\PhpJobRunner\Workflow\ExecutableTaskInterface;
 use Kyoya\PhpJobRunner\Workflow\InvalidTaskClassException;
@@ -74,7 +75,12 @@ class ExecuteTaskCommand extends ContainerAwareCommand
 
         /** @var ProviderInterface $stateStorage */
         $stateStorage = $this->container->get('state_storage');
-        $stateStorage->load($parameterBagId, $parameters);
+
+        // Try to load the state file.
+        try {
+            $stateStorage->load($parameterBagId, $parameters);
+        } catch (IOException $ignored) {
+        }
 
         if ($task instanceof ParameterAwareInterface) {
             $task->setParameters($parameters);
