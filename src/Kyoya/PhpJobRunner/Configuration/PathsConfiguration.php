@@ -18,10 +18,10 @@ class PathsConfiguration implements ConfigurationInterface
         $rootNode = $treeBuilder->root('paths');
         $rootNode
             ->children()
-            ->scalarNode('cache')->defaultValue('%root_dir%/app/cache/%env%')->end()
-            ->scalarNode('config')->defaultValue('%root_dir%/app/config')->end()
-            ->scalarNode('workflows')->defaultValue('%root_dir%/app/workflows')->end()
-            ->scalarNode('log')->defaultValue('%root_dir%/app/logs')->end()
+            ->scalarNode('cache')->defaultValue('%kernel.cache_dir%')->end()
+            ->scalarNode('config')->defaultValue('%kernel.root_dir%/config')->end()
+            ->scalarNode('workflows')->defaultValue('%kernel.root_dir%/workflows')->end()
+            ->scalarNode('log')->defaultValue('%kernel.logs_dir%')->end()
             ->end();
 
         return $treeBuilder;

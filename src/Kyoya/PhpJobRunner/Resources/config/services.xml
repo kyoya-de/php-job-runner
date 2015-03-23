@@ -27,7 +27,7 @@
         </service>
 
         <service id="logger.handler.main_log" class="%logger.handler.stream.class%">
-            <argument>%log_dir%/%env%.log</argument>
+            <argument>%log_dir%/%kernel.environment%.log</argument>
         </service>
 
         <service id="logger" class="%logger.class%">

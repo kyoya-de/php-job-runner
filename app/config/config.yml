@@ -1,6 +1,0 @@
-state_storage:
-    provider: provider.storage.php_serialize
-    provider_config:
-        tempPath: %root_dir%/app/tmp
-
-paths: ~
